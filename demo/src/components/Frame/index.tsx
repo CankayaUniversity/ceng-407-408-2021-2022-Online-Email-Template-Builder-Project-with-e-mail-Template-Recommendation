@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
+import { Card, Button, Alert } from 'react-bootstrap'
 import { Layout, Menu, Breadcrumb } from '@arco-design/web-react';
+import { Link, useHistory } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 import { Stack } from '../Stack';
 import { pushEvent } from '@demo/utils/pushEvent';
 import { githubButtonGenerate } from '@demo/utils/githubButtonGenerate';
@@ -23,7 +26,21 @@ export default function Frame({
   useEffect(() => {
     githubButtonGenerate();
   }, []);
+  const [error, setError] = useState("")
+  const { currentUser, logout } = useAuth()
+  const history = useHistory()
 
+
+  async function handleLogout() {
+    setError('')
+
+    try {
+      await logout()
+      history.push('/login')
+    } catch {
+      setError('Failed to log out')
+    }
+  }
   return (
     <Layout>
       <Header style={{ padding: '0 20px', backgroundColor: '#001529' }}>
@@ -31,6 +48,27 @@ export default function Frame({
           <h1 style={{ color: 'white', margin: '15px 0' }}>e-mailbuild</h1>
 
           <div style={{ marginTop: 10 }}>
+            <>
+              <Card>
+                <Card.Body>
+                  <h2 className="text-center mb-4">Profile</h2>
+                  {error && <Alert variant="danger">{error}</Alert>}
+                  <strong>Email:</strong> {currentUser.email}
+                  <Link to="/update-profile" className='btn btn-primary w-100 mt-3'>
+                    Update Profile
+                  </Link>
+
+
+                </Card.Body>
+
+              </Card>
+              <div className="w-100 text-center mt-2">
+                <Button varient="link" onClick={handleLogout}>
+                  Log Out
+                </Button>
+              </div>
+            </>
+
 
           </div>
         </Stack>
