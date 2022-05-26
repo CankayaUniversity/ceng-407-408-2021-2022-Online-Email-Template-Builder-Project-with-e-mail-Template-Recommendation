@@ -44,6 +44,8 @@ export default function ForgotPassword() {
                         <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '8px' }}>
                             Reset Password
                         </Button>
+
+
                     </Form>
                     <div className="w-100 text-center mt-3">
                         <Link to="/login">Login</Link>
