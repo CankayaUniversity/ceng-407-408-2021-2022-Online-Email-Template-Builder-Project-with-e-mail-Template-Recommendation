@@ -1,6 +1,6 @@
 import { IArticle } from '@demo/services/article';
-import React, { useCallback } from 'react';
-import { IconEdit, IconDelete } from '@arco-design/web-react/icon';
+import React, {useCallback, useState} from 'react';
+import { IconEdit, IconDelete ,IconHeartFill} from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 import styles from './index.module.scss';
 import { Popconfirm } from '@arco-design/web-react';
@@ -20,6 +20,7 @@ export function CardItem(props: CardItemProps) {
   const { data } = props;
   const dispatch = useDispatch();
   const history = useHistory();
+  const [likeNumber,setLikeNumber]= useState(0);
 
   const loading = useLoading([
     getLoadingByKey(template.loadings.duplicate, data.article_id),
@@ -37,7 +38,10 @@ export function CardItem(props: CardItemProps) {
       })
     );
   }, [data, dispatch]);
-
+  const onLikeHandler = (e)=>{
+      e.preventDefault()
+      setLikeNumber(prev => prev +1)
+  }
   const onDuplicate: React.MouseEventHandler<HTMLAnchorElement> = useCallback(
     (ev) => {
       ev.preventDefault();
@@ -100,6 +104,9 @@ export function CardItem(props: CardItemProps) {
                 Duplicate
               </Link>
             </div>
+              <div className={styles.listItem}>
+                  <button onClick={onLikeHandler}> <IconHeartFill/>Like:{likeNumber}</button>
+              </div>
           </div>
         )}
       </div>
